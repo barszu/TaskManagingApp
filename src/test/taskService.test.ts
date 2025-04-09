@@ -7,7 +7,6 @@ import {
 import Task from "../models/Task";
 import dbConnect from "../utils/dbConnect";
 
-// Mock dla dbConnect i Mongoose
 jest.mock("../utils/dbConnect", () => ({
   __esModule: true,
   default: jest.fn().mockResolvedValue(true),
@@ -24,20 +23,19 @@ jest.mock("../models/Task", () => ({
   },
 }));
 
-// Sample task data
 const sampleTasks = [
   {
     _id: "task1",
-    title: "Zadanie 1",
-    description: "Opis zadania 1",
+    title: "Task 1",
+    description: "Description of task 1",
     createdAt: new Date("2025-04-01"),
     isCompleted: false,
     priority: 1,
   },
   {
     _id: "task2",
-    title: "Zadanie 2",
-    description: "Opis zadania 2",
+    title: "Task 2",
+    description: "Description of task 2",
     createdAt: new Date("2025-04-02"),
     isCompleted: true,
     priority: 2,
@@ -50,8 +48,8 @@ describe("Task Service", () => {
   });
 
   describe("getFilteredTasks", () => {
-    it("powinien zwrócić posortowane i przefiltrowane zadania", async () => {
-      // Mock dla funkcji Mongoose
+    it("should return sorted and filtered tasks", async () => {
+      // Mock for Mongoose functions
       const mockSort = jest.fn().mockReturnThis();
       const mockSkip = jest.fn().mockReturnThis();
       const mockLimit = jest.fn().mockResolvedValue(sampleTasks);
@@ -64,19 +62,19 @@ describe("Task Service", () => {
 
       Task.countDocuments = jest.fn().mockResolvedValue(2);
 
-      // Wywołanie funkcji
+      // Function call
       const result = await getFilteredTasks({
-        search: "Zadanie",
+        search: "Task",
         sortField: "priority",
         sortOrder: "desc",
         page: 1,
         limit: 10,
       });
 
-      // Asercje
+      // Assertions
       expect(dbConnect).toHaveBeenCalled();
       expect(Task.find).toHaveBeenCalledWith({
-        title: { $regex: "Zadanie", $options: "i" },
+        title: { $regex: "Task", $options: "i" },
       });
       expect(mockSort).toHaveBeenCalledWith({ priority: -1 });
       expect(mockSkip).toHaveBeenCalledWith(0);
@@ -90,8 +88,8 @@ describe("Task Service", () => {
       });
     });
 
-    it("powinien użyć domyślnych wartości dla brakujących parametrów", async () => {
-      // Mock dla funkcji Mongoose
+    it("should use default values for missing parameters", async () => {
+      // Mock for Mongoose functions
       const mockSort = jest.fn().mockReturnThis();
       const mockSkip = jest.fn().mockReturnThis();
       const mockLimit = jest.fn().mockResolvedValue(sampleTasks);
@@ -104,10 +102,10 @@ describe("Task Service", () => {
 
       Task.countDocuments = jest.fn().mockResolvedValue(2);
 
-      // Wywołanie funkcji z minimalnymi parametrami
+      // Function call with minimal parameters
       await getFilteredTasks({});
 
-      // Asercje
+      // Assertions
       expect(Task.find).toHaveBeenCalledWith({});
       expect(mockSort).toHaveBeenCalledWith({ createdAt: 1 });
       expect(mockSkip).toHaveBeenCalledWith(0);
@@ -116,7 +114,7 @@ describe("Task Service", () => {
   });
 
   describe("getAllTasks", () => {
-    it("powinien zwrócić wszystkie zadania", async () => {
+    it("should return all tasks", async () => {
       Task.find = jest.fn().mockResolvedValue(sampleTasks);
 
       const result = await getAllTasks();
@@ -129,10 +127,10 @@ describe("Task Service", () => {
 });
 
 describe("updateTask", () => {
-  it("powinien zaktualizować istniejące zadanie", async () => {
+  it("should update an existing task", async () => {
     const updatedTask = {
-      title: "Zaktualizowane zadanie",
-      description: "Zaktualizowany opis",
+      title: "Updated task",
+      description: "Updated description",
       isCompleted: true,
       priority: 1,
     };
@@ -148,16 +146,17 @@ describe("updateTask", () => {
     expect(dbConnect).toHaveBeenCalled();
     expect(Task.findByIdAndUpdate).toHaveBeenCalledWith("task1", updatedTask, {
       new: true,
+      runValidators: true,
     });
     expect(result).toHaveProperty("_id", "task1");
-    expect(result).toHaveProperty("title", "Zaktualizowane zadanie");
+    expect(result).toHaveProperty("title", "Updated task");
     expect(result).toHaveProperty("isCompleted", true);
   });
 
-  it("powinien zwrócić null, gdy zadanie nie istnieje", async () => {
+  it("should return null when the task does not exist", async () => {
     Task.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
 
-    const result = await updateTask("nieistniejace_id", {
+    const result = await updateTask("nonexistent_id", {
       title: "Test",
       description: "Test",
       isCompleted: false,
@@ -169,7 +168,7 @@ describe("updateTask", () => {
 });
 
 describe("deleteTask", () => {
-  it("powinien usunąć zadanie", async () => {
+  it("should delete a task", async () => {
     Task.findByIdAndDelete = jest.fn().mockResolvedValue(sampleTasks[0]);
 
     const result = await deleteTask("task1");
@@ -179,10 +178,10 @@ describe("deleteTask", () => {
     expect(result).toEqual(sampleTasks[0]);
   });
 
-  it("powinien zwrócić null, gdy zadanie nie istnieje", async () => {
+  it("should return null when the task does not exist", async () => {
     Task.findByIdAndDelete = jest.fn().mockResolvedValue(null);
 
-    const result = await deleteTask("nieistniejace_id");
+    const result = await deleteTask("nonexistent_id");
 
     expect(result).toBeNull();
   });

@@ -1,7 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-// TODO to moze byc dziurawe
-
 export interface TaskDTO {
   title: string;
   description: string;

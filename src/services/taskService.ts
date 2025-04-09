@@ -62,9 +62,12 @@ export async function createTask(data: TaskDTO) {
   return await newTask.save();
 }
 
-export async function updateTask(id: string, data: TaskDTO) {
+export async function updateTask(id: string, data: Partial<TaskDTO>) {
   await dbConnect();
-  return await Task.findByIdAndUpdate(id, data, { new: true });
+  return await Task.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
 }
 
 export async function deleteTask(id: string) {
