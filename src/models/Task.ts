@@ -1,13 +1,15 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-// TODO to moze byc dziurawe
-
 export interface TaskDTO {
   title: string;
   description: string;
   createdAt: Date;
   isCompleted: boolean;
   priority: number;
+}
+
+export interface TaskDBO extends TaskDTO {
+  _id: string; // MongoDB ID
 }
 
 export interface ITask extends TaskDTO, Document {}

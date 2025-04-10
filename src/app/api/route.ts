@@ -9,19 +9,6 @@ import {
 } from "../../services/taskService";
 import { TaskDTO } from "../../models/Task";
 
-// export async function GET() {
-//   await dbConnect();
-//   try {
-//     const tasksList = await getAllTasks();
-//     return NextResponse.json(tasksList, { status: 200 });
-//   } catch (error) {
-//     return NextResponse.json(
-//       { message: "Error fetching tasks: " + error },
-//       { status: 500 }
-//     );
-//   }
-// }
-
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -34,7 +21,7 @@ export async function GET(req: NextRequest) {
       "priority",
     ];
 
-    // Przygotowanie parametrów dla getFilteredTasks
+    // preparing queryParams
     const queryParams: TaskQueryParams = {
       search: searchParams.get("search") || "",
       sortField: validSortFields.includes(sortFieldParam)
@@ -45,7 +32,6 @@ export async function GET(req: NextRequest) {
       limit: parseInt(searchParams.get("limit") || "10", 10),
     };
 
-    // Użycie getFilteredTasks z taskService.ts
     const result = await getFilteredTasks(queryParams);
 
     return NextResponse.json(result, { status: 200 });
