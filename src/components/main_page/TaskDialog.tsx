@@ -40,6 +40,7 @@ export default function TaskDialog({
     initialTask.isCompleted || false
   );
   const [priority, setPriority] = useState(initialTask.priority || 1);
+  const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
     if (initialTask && Object.keys(initialTask).length > 0) {
@@ -69,6 +70,34 @@ export default function TaskDialog({
     onClose();
   };
 
+  const handleHelpButtonClicked = () => {
+    const task = {
+      title,
+      description,
+      createdAt: new Date(createdAt),
+      isCompleted,
+      priority,
+    };
+    setIsFetching(true);
+    fetch("/api/autocompletion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(task),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setDescription((prev) => prev + data);
+      })
+      .catch((error) => {
+        alert("Error fetching data from GPT: " + error);
+      })
+      .finally(() => {
+        setIsFetching(false);
+      });
+  };
+
   return (
     <Dialog.Root
       lazyMount
@@ -91,12 +120,6 @@ export default function TaskDialog({
 
           <Dialog.Body>
             <Fieldset.Root size="lg">
-              <Fieldset.Legend>
-                {initialTask.title
-                  ? "Edytuj szczegóły zadania"
-                  : "Dodaj nowe zadanie"}
-              </Fieldset.Legend>
-
               <Field.Root>
                 <Field.Label>Tytuł</Field.Label>
                 <Input
@@ -106,12 +129,17 @@ export default function TaskDialog({
                 />
               </Field.Root>
 
+              <Button onClick={handleHelpButtonClicked} disabled={isFetching}>
+                {isFetching ? "Pobieram pomoc..." : "Poproś GPT o pomoc"}
+              </Button>
+
               <Field.Root>
                 <Field.Label>Opis</Field.Label>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Wpisz opis zadania"
+                  height={150}
                 />
               </Field.Root>
 
@@ -129,7 +157,6 @@ export default function TaskDialog({
                 <Input
                   type="number"
                   value={priority}
-                  defaultValue={2}
                   onChange={(e) => setPriority(Number(e.target.value))}
                 />
               </Field.Root>

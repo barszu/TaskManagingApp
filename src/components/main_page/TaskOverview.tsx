@@ -146,51 +146,54 @@ export default function TaskOverview() {
   if (error) return <p>Something went wrong</p>;
 
   return (
-    <Flex p={5} gap={5}>
-      {/* Kolumna filtrów */}
-      <Box width="250px" spaceY={4}>
-        <TaskFilters
-          onSubmit={handleTaskDialogSave}
-          currPage={data ? data.page : undefined}
-          currPageLimit={data ? data.totalPages : undefined}
-        />
-        <TaskDialog
-          isOpen={isDialogOpen}
-          onClose={() => setDialogOpen(false)}
-          initialTask={editingTask || undefined}
-          onSave={handleSave}
-        />
-        <VStack p={4} borderWidth="1px" borderRadius="md">
-          <Button
-            colorPalette={"green"}
-            width={"100%"}
-            onClick={() => openEditDialog(null)}
-          >
-            + Dodaj nowy task
-          </Button>
-        </VStack>
-      </Box>
+    <>
+      <TaskDialog
+        isOpen={isDialogOpen}
+        onClose={() => setDialogOpen(false)}
+        initialTask={editingTask || undefined}
+        onSave={handleSave}
+      />
+      <Flex p={5} gap={5}>
+        {/* Kolumna filtrów */}
+        <Box width="250px" spaceY={4}>
+          <TaskFilters
+            onSubmit={handleTaskDialogSave}
+            currPage={data ? data.page : undefined}
+            currPageLimit={data ? data.totalPages : undefined}
+          />
 
-      {/* cards column */}
-      <Box flex="1">
-        <Flex flexWrap="wrap" gap={4}>
-          {isLoading &&
-            Array.from({ length: 4 }).map((_, idx) => (
-              <TaskSkeleton key={idx} />
-            ))}
+          <VStack p={4} borderWidth="1px" borderRadius="md">
+            <Button
+              colorPalette={"green"}
+              width={"100%"}
+              onClick={() => openEditDialog(null)}
+            >
+              + Dodaj nowy task
+            </Button>
+          </VStack>
+        </Box>
 
-          {data &&
-            data.tasks.map((task: TaskDBO) => (
-              <TaskCard
-                key={task._id}
-                task={task}
-                onEditTaskClicked={() => openEditDialog(task)}
-                onCompleteTaskClicked={() => handleFinishTask(task)}
-                onDeleteTaskClicked={() => handleDeleteTask(task)}
-              />
-            ))}
-        </Flex>
-      </Box>
-    </Flex>
+        {/* cards column */}
+        <Box flex="1">
+          <Flex flexWrap="wrap" gap={4}>
+            {isLoading &&
+              Array.from({ length: 4 }).map((_, idx) => (
+                <TaskSkeleton key={idx} />
+              ))}
+
+            {data &&
+              data.tasks.map((task: TaskDBO) => (
+                <TaskCard
+                  key={task._id}
+                  task={task}
+                  onEditTaskClicked={() => openEditDialog(task)}
+                  onCompleteTaskClicked={() => handleFinishTask(task)}
+                  onDeleteTaskClicked={() => handleDeleteTask(task)}
+                />
+              ))}
+          </Flex>
+        </Box>
+      </Flex>
+    </>
   );
 }

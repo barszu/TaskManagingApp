@@ -165,11 +165,17 @@ export default function TaskFilters({
         Filtruj
       </Button>
       <HStack spaceX={2}>
-        <Button size="sm" onClick={handlePrevPage}>
+        <Button size="sm" onClick={handlePrevPage} disabled={page <= 1}>
           {"<"}
         </Button>
-        <Text>Strona {page}</Text>
-        <Button size="sm" onClick={handleNextPage}>
+        <Text>
+          Strona {page} / {currPageLimit}
+        </Text>
+        <Button
+          size="sm"
+          onClick={handleNextPage}
+          disabled={page >= currPageLimit}
+        >
           {">"}
         </Button>
       </HStack>
