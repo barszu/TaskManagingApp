@@ -5,7 +5,7 @@ This is a simple application built with Next.js and MongoDB for managing a colle
 ## Features
 
 - **Entity Management**: Add, edit, delete, and list entities.
-- **Dynamic Data Fetching**: Fetch and store external data (e.g., weather forecasts, currency exchange rates) for further use.
+- **Dynamic Data Fetching**: Fetch and store external data from GPT/Groq (LLM response).
 - **Sorting and Searching**: Easily sort and search through the list of entities.
 - **Pagination**: Navigate through large sets of entities with pagination support.
 - **Unique Identifier**: Each entity has a unique identifier for easy access and management.
@@ -16,6 +16,14 @@ This is a simple application built with Next.js and MongoDB for managing a colle
 - **MongoDB**: A NoSQL database for storing entity data.
 - **Mongoose**: An ODM (Object Data Modeling) library for MongoDB and Node.js.
 - **TypeScript**: A superset of JavaScript that adds static types.
+- **Chakra UI**: A simple, modular, and accessible component library for React applications.
+
+## Some Screenshots
+
+![](docs/img/dashboard.jpg)
+![](docs/img/dashboard2.jpg)
+![](docs/img/dashboard3.jpg)
+![](docs/img/dashboard4.jpg)
 
 ## Getting Started
 
@@ -28,52 +36,58 @@ This is a simple application built with Next.js and MongoDB for managing a colle
 
 1. Clone the repository:
 
-   ```
-   git clone https://github.com/yourusername/nextjs-mongo-app.git
+   ```bash
+   git clone https://github.com/barszu/TaskManagingApp.git
    ```
 
 2. Navigate to the project directory:
 
-   ```
-   cd nextjs-mongo-app
+   ```bash
+   cd TaskManagingApp
    ```
 
 3. Install the dependencies:
 
-   ```
+   ```bash
    npm install
    ```
 
-4. Set up your environment variables in the `.env.local` file. You will need to add your MongoDB connection string:
+4. Set up your environment variables in the `.env.local` file (root of project).
 
    ```
-   MONGODB_URI=your_mongodb_connection_string
+   MONGODB_URI=<your_mongodb_uri>
+   MONGODB_DB=<your_database_name>
+   GROQ_API_KEY=<your_groq_api_key>
    ```
 
 ### Running the Application
 
 To start the development server, run:
 
-```
+```bash
 npm run dev
+```
+
+Building, starting (non dev mode):
+
+```bash
+npm run build
+npm start
 ```
 
 The application will be available at `http://localhost:3000`.
 
 ### API Endpoints
 
-- `GET /api/entities`: List all entities.
-- `POST /api/entities`: Add a new entity.
-- `PUT /api/entities/:id`: Edit an existing entity.
-- `DELETE /api/entities/:id`: Delete an entity.
+For detailed API documentation, refer to the [API Documentation](docs/README.md) available in the `docs` folder.
 
-### Additional Features
+### Testing
 
-Feel free to explore and add more features to enhance the application. Some ideas include:
+To run the tests, use the following command:
 
-- User authentication to manage access to the entity management features.
-- Enhanced UI/UX with better styling and user feedback.
-- Integration with additional external data sources.
+```bash
+npm test
+```
 
 ## License
 
