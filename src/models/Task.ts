@@ -8,6 +8,10 @@ export interface TaskDTO {
   priority: number;
 }
 
+export interface TaskDBO extends TaskDTO {
+  _id: string; // MongoDB ID
+}
+
 export interface ITask extends TaskDTO, Document {}
 
 // Schema for the task

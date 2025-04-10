@@ -1,3 +1,5 @@
+"use server";
+
 import dbConnect from "@/utils/dbConnect";
 import Task, { TaskDTO, ITask } from "../models/Task";
 
